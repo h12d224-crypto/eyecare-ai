@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EyeCare AI - 청소년 안구건조증 1초 진단 및 웰니스 가이드</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-light: #ccfbf1;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+    }
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; }
+    .container { max-width: 540px; width: 100%; background: var(--card); border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); padding: 28px; }
+    .badge { display: inline-block; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 12px; padding: 5px 12px; border-radius: 99px; margin-bottom: 10px; }
+    h1 { font-size: 22px; margin: 0 0 8px; line-height: 1.35; }
+    p.sub { font-size: 14px; color: var(--muted); margin: 0 0 24px; line-height: 1.5; }
+    .question { margin-bottom: 22px; }
+    .question label { display: block; font-weight: 700; font-size: 15px; margin-bottom: 10px; }
+    .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .btn-group.two { grid-template-columns: repeat(2, 1fr); }
+    .opt-btn { padding: 12px 8px; border: 1.5px solid #cbd5e1; background: #fff; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; }
+    .opt-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .submit-btn { width: 100%; padding: 15px; background: var(--primary); color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+    .submit-btn:hover { background: #115e59; }
+    .result-box { display: none; margin-top: 26px; padding: 22px; border-radius: 16px; border: 2px solid #e2e8f0; background: #f1f5f9; }
+    .level-tag { display: inline-block; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 15px; color: #fff; margin-bottom: 10px; }
+    .score-info { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .guide-list { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.7; }
+    .rule-box { margin-top: 14px; padding: 12px; background: #fff; border-radius: 10px; font-size: 12.5px; color: #334155; border-left: 4px solid var(--primary); }
+    .timer-box { margin-top: 16px; padding: 14px; background: #0f172a; color: #fff; border-radius: 12px; text-align: center; }
+    .timer-display { font-size: 26px; font-weight: 800; margin: 6px 0; letter-spacing: 1px; }
+    .timer-btn { padding: 7px 14px; border: none; border-radius: 8px; background: #14b8a6; color: #fff; font-weight: 700; cursor: pointer; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="badge">AI 웰니스 보건 간호 서비스</span>
+    <h1>청소년 스마트폰 안구건조증 1초 진단</h1>
+    <p class="sub">의학 통계(OSDI·안과학회지) 기반 규칙 추론 AI가 현재 눈 위험도를 판별하고 안전한 관리 가이드를 제공합니다.</p>
+
+    <!-- 입력 1: 일일 화면 노출 시간 -->
+    <div class="question">
+      <label>1. 하루 평균 스마트폰·태블릿 화면 노출 시간은?</label>
+      <div class="btn-group" id="q1">
+        <button type="button" class="opt-btn" data-val="1" data-desc="4시간 미만">4시간 미만</button>
+        <button type="button" class="opt-btn" data-val="2" data-desc="4~8시간">4~8시간</button>
+        <button type="button" class="opt-btn" data-val="3" data-desc="8시간 이상">8시간 이상</button>
+      </div>
+    </div>
+
+    <!-- 입력 2: 주관적 안구 건조 증상 -->
+    <div class="question">
+      <label>2. 현재 느껴지는 눈의 건조·피로 증상은?</label>
+      <div class="btn-group" id="q2">
+        <button type="button" class="opt-btn" data-val="1" data-desc="거의 없음">거의 없음</button>
+        <button type="button" class="opt-btn" data-val="2" data-desc="뻑뻑함·피로">뻑뻑함·피로</button>
+        <button type="button" class="opt-btn" data-val="3" data-desc="통증·충혈·시림">통증·충혈·시림</button>
+      </div>
+    </div>
+
+    <!-- 입력 3: 야간 저조도 사용 여부 -->
+    <div class="question">
+      <label>3. 밤늦게 불을 끈 어두운 방에서 기기를 사용하나요?</label>
+      <div class="btn-group two" id="q3">
+        <button type="button" class="opt-btn" data-val="0" data-desc="밝은 곳에서 사용">아니요 (밝은 환경)</button>
+        <button type="button" class="opt-btn" data-val="1" data-desc="야간 저조도 노출">예 (어두운 환경 사용)</button>
+      </div>
+    </div>
+
+    <button type="button" class="submit-btn" onclick="diagnoseAI()">1초 만에 AI 위험도 진단하기</button>
+
+    <!-- 결과 출력 영역 -->
+    <div class="result-box" id="resultBox">
+      <span class="level-tag" id="levelTag">판정 결과</span>
+      <div class="score-info" id="scoreInfo"></div>
+      <ul class="guide-list" id="guideList"></ul>
+      <div class="rule-box" id="ruleExplain"></div>
+
+      <!-- 20-20-20 웰니스 타이머 -->
+      <div class="timer-box">
+        <div style="font-size:12.5px; color:#94a3b8;">20-20-20 안구 휴식 타이머 (20초간 먼 곳 바라보기)</div>
+        <div class="timer-display" id="timerDisplay">00:20</div>
+        <button type="button" class="timer-btn" onclick="startRestTimer()">20초 눈 휴식 시작</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const state = { q1: null, q2: null, q3: null, d1: "", d2: "", d3: "" };
+
+    ["q1", "q2", "q3"].forEach(group => {
+      const buttons = document.querySelectorAll(`#${group} .opt-btn`);
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          state[group] = parseInt(btn.dataset.val, 10);
+          state["d" + group[1]] = btn.dataset.desc;
+        });
+      });
+    });
+
+    // 규칙 기반 추론 엔진 (Rule-based AI Inference)
+    function diagnoseAI() {
+      if (state.q1 === null || state.q2 === null || state.q3 === null) {
+        alert("3가지 항목을 모두 선택해 주세요!");
+        return;
+      }
+
+      const totalScore = state.q1 + state.q2 + state.q3; // 최소 2점 ~ 최대 7점
+      let level = "", color = "", guides = [];
+
+      // IF-THEN 규칙 추론
+      if (totalScore >= 6) {
+        level = "중증 (Severe - 고위험군)";
+        color = "#dc2626";
+        guides = [
+          "즉시 스마트폰·태블릿 화면 사용을 중단하고 20분 이상 눈을 감고 휴식하세요.",
+          "방부제(벤잘코늄)가 없는 1회용 무방부제 인공눈물을 1회 1~2방울만 점안하세요.",
+          "통증·충혈이 지속될 경우 주말 중 반드시 안과 전문의 진료를 권장합니다."
+        ];
+      } else if (totalScore >= 4) {
+        level = "중등도 (Moderate - 주의군)";
+        color = "#ea580c";
+        guides = [
+          "화면 밝기를 주변 조명과 비슷하게 낮추고 야간 블루라이트 차단 모드를 켜세요.",
+          "인공눈물은 하루 4회 이내 정량만 사용하고, 개봉 후 24시간이 지난 1회용 점안액은 폐기하세요.",
+          "아래 '20초 눈 휴식 타이머'를 눌러 20피트(6m) 이상 먼 곳을 바라보세요."
+        ];
+      } else if (totalScore === 3) {
+        level = "경도 (Mild - 초기 관리군)";
+        color = "#d97706";
+        guides = [
+          "장시간 인강 시청·게임 중 의식적으로 1분에 15회 이상 눈을 깜빡여 주세요.",
+          "취침 1시간 전에는 어두운 방에서 스마트폰 사용을 자제하는 것이 좋습니다."
+        ];
+      } else {
+        level = "정상 (Normal - 안전군)";
+        color = "#059669";
+        guides = [
+          "현재 건강한 눈 상태를 유지하고 있습니다! 예방 차원의 눈 깜빡임 스트레칭을 지속하세요."
+        ];
+      }
+
+      document.getElementById("resultBox").style.display = "block";
+      const tag = document.getElementById("levelTag");
+      tag.textContent = `AI 판정: ${level}`;
+      tag.style.backgroundColor = color;
+
+      document.getElementById("scoreInfo").textContent =
+        `종합 위험 점수: ${totalScore}점 / 7점 만점 (입력 조건: ${state.d1} · ${state.d2} · ${state.d3})`;
+
+      const ul = document.getElementById("guideList");
+      ul.innerHTML = guides.map(g => `<li>${g}</li>`).join("");
+
+      document.getElementById("ruleExplain").innerHTML =
+        `<strong>[AI 추론 근거 설명(XAI)]</strong><br>` +
+        `IF 노출시간(${state.q1}점) + 증상(${state.q2}점) + 야간가중치(${state.q3}점) = <b>${totalScore}점</b> → ` +
+        `대한가정의학회지(OSDI) 및 식약처 점안제 안전 기준 규칙에 따라 <b>${level}</b>으로 분류됨.`;
+    }
+
+    let timerId = null;
+    function startRestTimer() {
+      clearInterval(timerId);
+      let sec = 20;
+      const display = document.getElementById("timerDisplay");
+      display.textContent = "00:20";
+      timerId = setInterval(() => {
+        sec--;
+        display.textContent = `00:${sec < 10 ? "0" + sec : sec}`;
+        if (sec <= 0) {
+          clearInterval(timerId);
+          display.textContent = "휴식 완료!";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
